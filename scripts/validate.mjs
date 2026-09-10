@@ -61,6 +61,13 @@ const price='$'+new Intl.NumberFormat('es-MX',{maximumFractionDigits:0}).format(
 assert(html.includes(price));
 assert(html.includes(`<time datetime="${data.commercialSourceDate}">`));
 assert.equal((html.match(/class="faq-item"/g)||[]).length,5);
+assert.equal((html.match(/<details class="faq-item" name="solara-faq"/g)||[]).length,5);
+assert.equal((html.match(/<details[^>]*\bopen\b/g)||[]).length,1,'Open the first answer initially');
+assert.match(html,/<details class="faq-item" name="solara-faq" open>/);
+assert(!/brochure/i.test(html),'Source-document terminology must stay out of visitor-facing content');
+assert(html.includes(`href="tel:${data.phoneE164}"`),'Commercial phone must be callable');
+assert(html.includes(data.phoneDisplay));
+assert.equal(schema['@graph'][2].telephone,data.phoneE164);
 assert(!/<form\b|wa\.me|wa\.link|googletagmanager|facebook\.com\/tr|llms\.txt|@virtuomkt/i.test(html));
 assert(!references.has('./assets/Brief Performance Solara — Meta Ads.pdf'));
 console.log(`PASS: static HTML, ${references.size} local references, headings, plans, FAQ, Montserrat, structured data and ${data.publicLaunch?'public':'private'} indexing settings.`);

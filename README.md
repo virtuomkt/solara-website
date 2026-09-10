@@ -5,7 +5,7 @@ Página estática informativa en español, con Montserrat variable alojada local
 ## Edición
 
 - `content/solara.json`: datos comerciales y configuración de publicación. El precio y su fecha proceden del brochure del 1 de septiembre de 2026; no representan una nueva verificación de disponibilidad.
-- `src/index.html`: plantilla del contenido. `dist/styles.css` y `dist/site.js`: estilos e interacción de planos. Los enlaces a imágenes funcionan sin JavaScript.
+- `src/index.html`: plantilla del contenido. `dist/styles.css` y `dist/site.js`: estilos, planos y acordeón de preguntas. Los enlaces a imágenes y las preguntas nativas funcionan sin JavaScript; con JavaScript siempre se mantiene una respuesta abierta, empezando por la primera.
 - Ejecutar `node scripts/render.mjs` después de editar los datos o la plantilla. El resultado HTML completo se conserva en `dist/index.html`, junto a robots, sitemap y cabeceras.
 - Ejecutar `node scripts/validate.mjs` para validar el contenido, metadatos, recursos y configuración de indexación. No requiere paquetes externos.
 
@@ -25,4 +25,4 @@ Solo después de autorizar el lanzamiento público:
 
 Los renders originales y el brochure permanecen intactos en `assets/` (excluidos de Git). `dist/media/` contiene copias WebP optimizadas, los planos y un recorte del mapa suministrado. La fuente proviene de Google Fonts, familia Montserrat variable 100–900, subconjunto latino con español; licencia OFL en `dist/fonts/OFL.txt`.
 
-No se incluyen captación, CRM, analítica, píxeles publicitarios, inventario, llms.txt ni una imagen social generada.
+El footer incluye el teléfono comercial enlazado para llamar. No se incluyen formularios, CRM, analítica, píxeles publicitarios, inventario, llms.txt ni una imagen social generada.

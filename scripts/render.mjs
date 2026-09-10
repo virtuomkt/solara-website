@@ -20,7 +20,7 @@ const schema = {
   '@graph': [
     { '@type': 'WebSite', '@id': `${url}#website`, url, name: data.name, inLanguage: 'es-MX' },
     { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: title, description, inLanguage: 'es-MX', isPartOf: {'@id': `${url}#website`}, about: {'@id': `${url}#solara`}, mainEntity: {'@id': `${url}#solara`} },
-    { '@type': 'GatedResidenceCommunity', '@id': `${url}#solara`, name: data.name, url, description: `Fraccionamiento privado de ${data.homes} viviendas en ${data.location}. Cada vivienda cuenta con ${data.constructionAreaM2} m² de construcción, cocina integral, jardín privado y estacionamiento techado.`, hasMap: data.mapUrl, image: `${url}media/comunidad-1920.webp`, amenityFeature: data.amenities.map(name => ({'@type':'LocationFeatureSpecification', name, value:true})) }
+    { '@type': 'GatedResidenceCommunity', '@id': `${url}#solara`, name: data.name, url, telephone: data.phoneE164, description: `Fraccionamiento privado de ${data.homes} viviendas en ${data.location}. Cada vivienda cuenta con ${data.constructionAreaM2} m² de construcción, cocina integral, jardín privado y estacionamiento techado.`, hasMap: data.mapUrl, image: `${url}media/comunidad-1920.webp`, amenityFeature: data.amenities.map(name => ({'@type':'LocationFeatureSpecification', name, value:true})) }
   ]
 };
 const faqs = [
@@ -28,15 +28,16 @@ const faqs = [
   ['¿Cuántas viviendas tiene el desarrollo?', `El conjunto está integrado por ${data.homes} viviendas. Esta cifra describe el total del desarrollo, no la disponibilidad actual.`],
   ['¿Cuánto mide cada vivienda?', `Cada vivienda cuenta con ${data.constructionAreaM2} m² de construcción, además de los espacios y la distribución que puedes consultar en los planos de esta página.`],
   ['¿Qué amenidades y seguridad ofrece Solara?', `Solara cuenta con alberca, parque, juegos infantiles, asadores y sanitarios exteriores. El desarrollo incluye acceso vehicular con caseta de control y vigilancia 24/7.`],
-  ['¿Cuál es el precio de las viviendas?', `El precio publicado es desde ${price} ${data.currency}, según el brochure del ${formattedSourceDate}. Los precios y la disponibilidad están sujetos a cambios sin previo aviso.`]
+  ['¿Cuál es el precio de las viviendas?', `El precio publicado es desde ${price} ${data.currency}, con información comercial al ${formattedSourceDate}. Los precios y la disponibilidad están sujetos a cambios sin previo aviso.`]
 ];
 const values = {
   TITLE: esc(title), DESCRIPTION: esc(description), URL: esc(url),
   ROBOTS: data.publicLaunch ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
   SCHEMA: JSON.stringify(schema, null, 2).replace(/</g, '\\u003c'),
   PRICE: esc(price), CURRENCY: esc(data.currency), HOMES: esc(data.homes), AREA: esc(data.constructionAreaM2),
-  MAP_URL: esc(data.mapUrl), SOURCE_DATE: esc(data.commercialSourceDate), SOURCE_LABEL: esc(`Información comercial del brochure: ${formattedSourceDate}`),
-  FAQS: faqs.map(([q,a]) => `<article class="faq-item"><h3>${esc(q)}</h3><p>${esc(a)}</p></article>`).join('\n')
+  MAP_URL: esc(data.mapUrl), SOURCE_DATE: esc(data.commercialSourceDate), SOURCE_LABEL: esc(`Información comercial al ${formattedSourceDate}`),
+  PHONE_DISPLAY: esc(data.phoneDisplay), PHONE_HREF: esc(`tel:${data.phoneE164}`),
+  FAQS: faqs.map(([q,a], index) => `<details class="faq-item" name="solara-faq"${index === 0 ? ' open' : ''}><summary><h3>${esc(q)}<span class="faq-icon" aria-hidden="true"></span></h3></summary><p>${esc(a)}</p></details>`).join('\n')
 };
 let html = await readFile(path.join(root, 'src/index.html'), 'utf8');
 html = html.replace(/\{\{([A-Z_]+)\}\}/g, (_, key) => {if (!(key in values)) throw new Error(`Unknown token: ${key}`); return values[key];});
