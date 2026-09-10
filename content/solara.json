@@ -1,0 +1,16 @@
+{
+  "name": "Solara City Homes",
+  "tagline": "Tu refugio en la ciudad",
+  "location": "Veracruz",
+  "homes": 14,
+  "constructionAreaM2": "172.50",
+  "startingPrice": 4950000,
+  "currency": "MXN",
+  "commercialSourceDate": "2026-09-01",
+  "commercialSource": "assets/Solara brochure.pdf",
+  "mapUrl": "https://maps.app.goo.gl/RHgBnZZ1G7HXrjAx9",
+  "amenities": ["Alberca", "Parque", "Juegos infantiles", "Asadores", "Sanitarios exteriores", "Seguridad 24/7", "Acceso vehicular con caseta de control"],
+  "privateOrigin": "https://solara-city-homes.cozy-heron-8555.chatgpt.site",
+  "publicOrigin": null,
+  "publicLaunch": false
+}
