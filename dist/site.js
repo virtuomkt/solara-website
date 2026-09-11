@@ -24,7 +24,7 @@ if ('IntersectionObserver' in window && !motionPreference.matches) {
       ], { duration: 540, easing: 'cubic-bezier(.2,.7,.2,1)' });
     });
   }, { threshold: 0, rootMargin: '0px 0px -24px 0px' });
-  document.querySelectorAll('.intro > div, main > .shell > figure, .section-heading, .home-layout > figure, .home-details, .amenities-head, .amenity, .location-grid > figure, .closing, .footer-contact').forEach(element => {
+  document.querySelectorAll('.intro-grid > *, .gallery-intro > figure, .section-heading, .homes-grid > figure, .homes-side > *, .privacy-band, .amenities-head, .amenity, .location-duo > figure, .places-grid > li, .closing-inner, .footer-contact').forEach(element => {
     // Leave the initial viewport (especially the hero) untouched.
     if (element.getBoundingClientRect().top >= window.innerHeight) observer.observe(element);
   });

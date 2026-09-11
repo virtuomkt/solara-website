@@ -13,18 +13,21 @@ const sourceDate = new Date(`${data.commercialSourceDate}T12:00:00Z`);
 if (!Number.isFinite(sourceDate.getTime()) || !/^\d{4}-\d{2}-\d{2}$/.test(data.commercialSourceDate)) throw new Error('A valid commercial source date is required.');
 const formattedSourceDate = new Intl.DateTimeFormat('es-MX', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(sourceDate);
 const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const title = `${data.name} | Casas en fraccionamiento privado en ${data.location}`;
-const description = `${data.name}: fraccionamiento privado en ${data.location}, con jardín privado, estacionamiento techado y amenidades. Descarga el folleto con planos, superficies y precios.`;
+const title = `${data.shortName} | Fraccionamiento privado de ${data.homes} viviendas en ${data.location}`;
+const description = `${data.shortName}: fraccionamiento privado de ${data.homes} viviendas en ${data.neighborhood}, ${data.location}, cerca de todo. Jardín privado, estacionamiento techado y amenidades. Descarga el folleto con planos, superficies y precios.`;
+if (!Number.isFinite(data.latitude) || !Number.isFinite(data.longitude)) throw new Error('Map coordinates are required.');
+const mapEmbed = `https://www.google.com/maps?q=${data.latitude},${data.longitude}&hl=es&z=16&output=embed`;
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'WebSite', '@id': `${url}#website`, url, name: data.name, inLanguage: 'es-MX' },
+    { '@type': 'WebSite', '@id': `${url}#website`, url, name: data.shortName, alternateName: data.name, inLanguage: 'es-MX' },
     { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: title, description, inLanguage: 'es-MX', isPartOf: {'@id': `${url}#website`}, about: {'@id': `${url}#solara`}, mainEntity: {'@id': `${url}#solara`} },
-    { '@type': 'GatedResidenceCommunity', '@id': `${url}#solara`, name: data.name, url, telephone: data.phoneE164, description: `Fraccionamiento privado en ${data.location}, con jardín privado, estacionamiento techado y amenidades para la comunidad.`, hasMap: data.mapUrl, image: `${url}media/comunidad-1920.webp`, amenityFeature: data.amenities.map(name => ({'@type':'LocationFeatureSpecification', name, value:true})) }
+    { '@type': 'GatedResidenceCommunity', '@id': `${url}#solara`, name: data.name, alternateName: data.shortName, url, telephone: data.phoneE164, description: `Fraccionamiento privado de ${data.homes} viviendas en ${data.neighborhood}, ${data.location}, con jardín privado, estacionamiento techado y amenidades para la comunidad.`, address: {'@type':'PostalAddress', streetAddress: data.streetAddress, addressLocality: data.location, addressRegion: 'Veracruz', postalCode: data.postalCode, addressCountry: 'MX'}, geo: {'@type':'GeoCoordinates', latitude: data.latitude, longitude: data.longitude}, hasMap: data.mapUrl, image: `${url}media/area-social-1920.webp`, amenityFeature: data.amenities.map(name => ({'@type':'LocationFeatureSpecification', name, value:true})) }
   ]
 };
 const values = {
   TITLE: esc(title), DESCRIPTION: esc(description), URL: esc(url),
+  NAME: esc(data.name), SHORT_NAME: esc(data.shortName), LOCATION: esc(data.location), NEIGHBORHOOD: esc(data.neighborhood), STREET: esc(data.streetAddress), MAP_EMBED: esc(mapEmbed),
   ROBOTS: data.publicLaunch ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
   SCHEMA: JSON.stringify(schema, null, 2).replace(/</g, '\\u003c'),
   PRICE: esc(price), CURRENCY: esc(data.currency), HOMES: esc(data.homes), AREA: esc(data.constructionAreaM2),

@@ -1,3 +1,0 @@
-# Private review: HTML also sends noindex. Access is controlled by Sites.
-User-agent: *
-Allow: /

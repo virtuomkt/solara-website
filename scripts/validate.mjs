@@ -14,7 +14,7 @@ assert.equal((html.match(/<h1\b/g)||[]).length,1,'Exactly one H1 required');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'Duplicate element IDs');
 for (const m of html.matchAll(/\bhref="#([^"]+)"/g)) assert(ids.includes(m[1]),`Missing section ${m[1]}`);
-for (const section of ['desarrollo','viviendas','amenidades','ubicacion']) assert(ids.includes(section));
+for (const section of ['desarrollo','viviendas','amenidades','ubicacion','distribucion']) assert(ids.includes(section));
 const references = new Set([...html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)].map(m=>m[1]));
 for (const m of html.matchAll(/srcset="([^"]+)"/g)) for(const source of m[1].split(',')) references.add(source.trim().split(' ')[0]);
 for (const m of css.matchAll(/url\(['"]?(\.\/[^)'"\s]+)/g)) references.add(m[1]);
@@ -55,12 +55,25 @@ if(data.publicLaunch){
   assert.match(headers,/X-Robots-Tag: noindex, nofollow/);
   assert(!sitemap.includes('<loc>'),'Private origin must not be submitted in sitemap');
 }
-// The site is a lead page: commercial detail lives in the downloadable brochure, not on the page.
+// The site is a lead page: price, construction area, floor plans, availability and FAQ live only in the
+// downloadable brochure. The home count, site plan (croquis), map and nearby places are shown by client request.
 const price='$'+new Intl.NumberFormat('es-MX',{maximumFractionDigits:0}).format(data.startingPrice);
 assert(!html.includes(price),'Pricing belongs in the brochure, not on the page');
 assert(!html.includes(`${data.constructionAreaM2} m²`),'Construction area belongs in the brochure, not on the page');
+assert(!/vendid|planta baja|nivel 0\d|azotea/i.test(html),'Availability and floor plans belong in the brochure, not on the page');
+assert(!/<details\b|preguntas frecuentes/i.test(html),'FAQ belongs in the brochure, not on the page');
+assert(html.includes(`${data.homes} viviendas`),'The hero states the number of homes');
 assert(html.includes(`<time datetime="${data.commercialSourceDate}">`));
-assert.equal((html.match(/href="\.\/media\/[^"]+\.pdf" download=/g)||[]).length,2,'The brochure download belongs in both the hero and the footer');
+const download=/href="\.\/media\/[^"]+\.pdf" download=/;
+assert(download.test(html.slice(html.indexOf('class="hero"'),html.indexOf('id="desarrollo"'))),'The brochure download belongs in the hero');
+assert(download.test(html.slice(html.indexOf('<footer'))),'The brochure download belongs in the footer');
+const iframes=html.match(/<iframe\b[^>]*>/g)||[];
+assert.equal(iframes.length,1,'One embedded map');
+assert.match(iframes[0],/src="https:\/\/www\.google\.com\/maps\?q=[-\d.]+,[-\d.]+&amp;[^"]*output=embed"/,'Google Maps embed at the project coordinates');
+assert.match(iframes[0],/title="[^"]+"/,'The map needs an accessible title');
+assert.match(iframes[0],/loading="lazy"/,'The map loads lazily');
+assert.equal((html.match(/<ol class="croquis-marks"[^>]*>([\s\S]*?)<\/ol>/)[1].match(/<li\b/g)||[]).length,data.homes,'The croquis numbers every home');
+assert.deepEqual([schema['@graph'][2].geo.latitude,schema['@graph'][2].geo.longitude],[data.latitude,data.longitude]);
 assert(!/brochure/i.test(html),'Source-document terminology must stay out of visitor-facing content');
 assert(html.includes(`href="tel:${data.phoneE164}"`),'Commercial phone must be callable');
 assert(html.includes(data.phoneDisplay));
