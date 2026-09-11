@@ -14,7 +14,7 @@ assert.equal((html.match(/<h1\b/g)||[]).length,1,'Exactly one H1 required');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'Duplicate element IDs');
 for (const m of html.matchAll(/\bhref="#([^"]+)"/g)) assert(ids.includes(m[1]),`Missing section ${m[1]}`);
-for (const section of ['desarrollo','viviendas','amenidades','ubicacion','preguntas']) assert(ids.includes(section));
+for (const section of ['desarrollo','viviendas','amenidades','ubicacion']) assert(ids.includes(section));
 const references = new Set([...html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)].map(m=>m[1]));
 for (const m of html.matchAll(/srcset="([^"]+)"/g)) for(const source of m[1].split(',')) references.add(source.trim().split(' ')[0]);
 for (const m of css.matchAll(/url\(['"]?(\.\/[^)'"\s]+)/g)) references.add(m[1]);
@@ -25,10 +25,8 @@ for (const ref of references) {
 }
 for (const match of html.matchAll(/<img\b[^>]*>/g)) {
   assert.match(match[0],/\balt="[^"]*"/,'All images need alt text');
-  if(!match[0].includes('lightbox-image')) {
-    assert.match(match[0],/\bwidth="\d+"/,'Reserve image width');
-    assert.match(match[0],/\bheight="\d+"/,'Reserve image height');
-  }
+  assert.match(match[0],/\bwidth="\d+"/,'Reserve image width');
+  assert.match(match[0],/\bheight="\d+"/,'Reserve image height');
 }
 assert.match(html, /fetchpriority="high"/);
 assert.equal((css.match(/@font-face/g)||[]).length,1,'Use only Montserrat');
@@ -57,17 +55,16 @@ if(data.publicLaunch){
   assert.match(headers,/X-Robots-Tag: noindex, nofollow/);
   assert(!sitemap.includes('<loc>'),'Private origin must not be submitted in sitemap');
 }
+// The site is a lead page: commercial detail lives in the downloadable brochure, not on the page.
 const price='$'+new Intl.NumberFormat('es-MX',{maximumFractionDigits:0}).format(data.startingPrice);
-assert(html.includes(price));
+assert(!html.includes(price),'Pricing belongs in the brochure, not on the page');
+assert(!html.includes(`${data.constructionAreaM2} m²`),'Construction area belongs in the brochure, not on the page');
 assert(html.includes(`<time datetime="${data.commercialSourceDate}">`));
-assert.equal((html.match(/class="faq-item"/g)||[]).length,5);
-assert.equal((html.match(/<details class="faq-item" name="solara-faq"/g)||[]).length,5);
-assert.equal((html.match(/<details[^>]*\bopen\b/g)||[]).length,1,'Open the first answer initially');
-assert.match(html,/<details class="faq-item" name="solara-faq" open>/);
+assert.equal((html.match(/href="\.\/media\/[^"]+\.pdf" download=/g)||[]).length,2,'The brochure download belongs in both the hero and the footer');
 assert(!/brochure/i.test(html),'Source-document terminology must stay out of visitor-facing content');
 assert(html.includes(`href="tel:${data.phoneE164}"`),'Commercial phone must be callable');
 assert(html.includes(data.phoneDisplay));
 assert.equal(schema['@graph'][2].telephone,data.phoneE164);
 assert(!/<form\b|wa\.me|wa\.link|googletagmanager|facebook\.com\/tr|llms\.txt|@virtuomkt/i.test(html));
 assert(!references.has('./assets/Brief Performance Solara — Meta Ads.pdf'));
-console.log(`PASS: static HTML, ${references.size} local references, headings, plans, FAQ, Montserrat, structured data and ${data.publicLaunch?'public':'private'} indexing settings.`);
+console.log(`PASS: static HTML, ${references.size} local references, headings, brochure download, Montserrat, structured data and ${data.publicLaunch?'public':'private'} indexing settings.`);

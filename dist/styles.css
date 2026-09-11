@@ -23,6 +23,9 @@ strong,.type-emphasis{font-weight:600}
 .hero .cta:focus-visible{outline-color:white}
 .nav .nav-location.cta{padding:11px 20px}
 .location-cta{max-width:100%}
+.location-grid{grid-template-columns:1fr;gap:28px}
+.location-cta{justify-self:start;margin-top:0}
+.map-link img{aspect-ratio:1.85}
 
 /* Native accordion: all answers remain in the initial HTML. */
 .faq-list{display:block}
@@ -50,10 +53,11 @@ strong,.type-emphasis{font-weight:600}
 .footer-phone{display:inline-block;color:var(--gold);font-weight:600;font-size:clamp(2rem,3.7vw,3.75rem);letter-spacing:-.045em;line-height:1.35;white-space:nowrap;text-underline-offset:8px}
 .footer-phone:hover{text-decoration:underline;color:#f0b346}
 .footer-phone:focus-visible{outline:3px solid var(--gold);outline-offset:6px}
-.footer-phone-block>p:last-child{font-size:.875rem;margin-top:10px}
+.footer-phone-block>p:last-of-type{font-size:.875rem;margin-top:10px}
+.footer-download{margin-top:24px}
 .footer-bottom{display:flex;justify-content:space-between;gap:40px;padding-top:28px;border-top:1px solid #ffffff30}
 .footer-legal{max-width:560px}
 .footer-review{max-width:320px}
 .footer .back-to-top{min-height:44px;display:inline-flex;align-items:center;margin-top:4px}
 @media(max-width:1000px){.footer-contact{grid-template-columns:1fr;gap:30px}.footer-phone-block{text-align:left}.footer-phone{font-size:clamp(2rem,5.3vw,3.75rem)}.footer-bottom{flex-direction:column;gap:20px}}
-@media(max-width:700px){.nav .nav-location.cta{padding:8px 14px;min-height:44px}.hero-bottom .cta{width:100%}.intro-copy .stat-number{font-size:clamp(1.7rem,6.5vw,2.4375rem)}.faq-item summary h3{gap:16px}.faq-item p{padding-right:0}.footer{padding-block:48px 24px}.footer-contact{padding-bottom:32px;gap:28px}.footer-contact h2{font-size:1.625rem}.footer-phone{font-size:clamp(1.8rem,7.8vw,3rem)}.footer-bottom{gap:16px}.footer-phone-block>p:last-child{font-size:.8125rem}}
+@media(max-width:700px){.nav .nav-location.cta{padding:8px 14px;min-height:44px}.hero-bottom .cta{width:100%}.intro-copy .stat-number{font-size:clamp(1.7rem,6.5vw,2.4375rem)}.faq-item summary h3{gap:16px}.faq-item p{padding-right:0}.footer{padding-block:48px 24px}.footer-contact{padding-bottom:32px;gap:28px}.footer-contact h2{font-size:1.625rem}.footer-phone{font-size:clamp(1.8rem,7.8vw,3rem)}.footer-bottom{gap:16px}.footer-phone-block>p:last-of-type{font-size:.8125rem}.footer-download{margin-top:20px}}
