@@ -1,8 +1,10 @@
 name: Deploy Pages
 
+# La raíz publica siempre dist/ de main (la versión vigente) y, junto a ella,
+# cada versión anterior en su propia subcarpeta tomada de su rama: /v1/, /v2/, /v3/.
 on:
   push:
-    branches: [main]
+    branches: [main, 'version-*']
   workflow_dispatch:
 
 permissions:
@@ -22,9 +24,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Ensamblar la versión vigente y las versiones con enlace propio
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          git archive origin/main dist | tar -x --strip-components=1 -C _site
+          for version in 1 2 3; do
+            mkdir -p "_site/v$version"
+            git archive "origin/version-$version" dist | tar -x --strip-components=1 -C "_site/v$version"
+          done
+          mkdir -p _site/version-anterior
+          cp .github/pages/version-anterior.html _site/version-anterior/index.html
+          du -sh _site _site/v1 _site/v2 _site/v3
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
