@@ -93,6 +93,8 @@ h2{font-size:clamp(2.25rem,4.4vw,4.5rem);line-height:1.08;letter-spacing:-.045em
 .homes-copy p{color:var(--muted)}
 .features{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.125rem}
 .features li{padding:.375rem .875rem;border:1px solid #d6ccbe;border-radius:999px;background:var(--paper);font-size:.875rem;font-weight:500}
+.inline-cta{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid #d6ccbe}
+.inline-cta p{font-size:.9375rem}
 .homes-detail{flex:1;min-height:13rem}
 .homes-detail img{object-position:50% 60%}
 
@@ -119,6 +121,9 @@ h2{font-size:clamp(2.25rem,4.4vw,4.5rem);line-height:1.08;letter-spacing:-.045em
 .amenity+.amenity{padding-left:1.75rem;border-left:1px solid #ffffff30}
 .amenity svg{width:2.75rem;height:2.75rem;margin-bottom:1rem;stroke:var(--gold);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 .amenity h3{font-size:1.25rem;font-weight:500}
+.amenities-cta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem 2rem;margin-top:clamp(2rem,3.4vw,3rem);padding-top:clamp(1.5rem,2.4vw,2rem);border-top:1px solid #ffffff30}
+.amenities-cta p{color:#d4dce0;font-size:1.125rem}
+.amenities .cta:focus-visible{outline-color:var(--paper)}
 
 /* 04 Ubicación y distribución */
 .location-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap-tight)}
@@ -205,6 +210,7 @@ h2{font-size:clamp(2.25rem,4.4vw,4.5rem);line-height:1.08;letter-spacing:-.045em
   .gallery-main img{aspect-ratio:1.4}
   .gallery-side{aspect-ratio:4/3}
   .homes-copy{padding:1.25rem}
+  .inline-cta .cta,.amenities-cta .cta{width:100%}
   .homes-detail{flex:none;aspect-ratio:1.5}
   .privacy-band{display:block;min-height:0}
   .privacy-band img{position:static;height:auto;aspect-ratio:4/3;object-position:50% 70%}

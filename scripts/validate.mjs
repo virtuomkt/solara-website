@@ -67,6 +67,7 @@ assert(html.includes(`<time datetime="${data.commercialSourceDate}">`));
 const download=/href="\.\/media\/[^"]+\.pdf" download=/;
 assert(download.test(html.slice(html.indexOf('class="hero"'),html.indexOf('id="desarrollo"'))),'The brochure download belongs in the hero');
 assert(download.test(html.slice(html.indexOf('<footer'))),'The brochure download belongs in the footer');
+for (const [start,end,where] of [['id="viviendas"','class="privacy"','homes'],['id="amenidades"','id="ubicacion"','amenities']]) assert(download.test(html.slice(html.indexOf(start),html.indexOf(end))),`The brochure download belongs in the ${where} section`);
 const iframes=html.match(/<iframe\b[^>]*>/g)||[];
 assert.equal(iframes.length,1,'One embedded map');
 assert.match(iframes[0],/src="https:\/\/www\.google\.com\/maps\?q=[-\d.]+,[-\d.]+&amp;[^"]*output=embed"/,'Google Maps embed at the project coordinates');
